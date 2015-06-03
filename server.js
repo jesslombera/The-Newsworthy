@@ -35,37 +35,37 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 //ROUTES INDEX test
-app.get('/', function(req,res) {
+// app.get('/', function(req,res) {
 
-	console.log("index");
+// 	console.log("index");
 
-	var request_body = 'http://www.google.com';
-	var request_phone = '+16507139719'
+// 	var request_body = 'http://www.google.com';
+// 	var request_phone = '+16507139719'
 
 
-	db.User
-	.findOrCreate( { where: {phone: request_phone} })
-	.spread(function(user, created) {
+// 	db.User
+// 	.findOrCreate( { where: {phone: request_phone} })
+// 	.spread(function(user, created) {
 
-		if (created) {
-			console.log('User created');
-		} else {
-			console.log('User already exists');
-		}
+// 		if (created) {
+// 			console.log('User created');
+// 		} else {
+// 			console.log('User already exists');
+// 		}
 
-		console.log('The user_id is ' + user.id);
-		console.log('The message is ' + request_body);
+// 		console.log('The user_id is ' + user.id);
+// 		console.log('The message is ' + request_body);
 
-		db.Message
-		.create({ text_body: request_body, user_id: user.id })
-		.then(function(message) {
-			console.log('message created with id ' + message.id);
-		})
+// 		db.Message
+// 		.create({ text_body: request_body, user_id: user.id })
+// 		.then(function(message) {
+// 			console.log('message created with id ' + message.id);
+// 		})
 
-	})
+// 	})
 
-  res.render('index');
-});
+//   res.render('index');
+// });
 
 // manually deliver all the messages
 app.get('/deliver', function(req,res) {
