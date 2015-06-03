@@ -151,17 +151,17 @@ app.post('/message', function (req, res) {
 
 
 
-// app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3000);
 
 
-  db.sequelize.sync().then(function() {
-    var server = app.listen(3000, function() {
-    // This part just adds a snazzy listening message:
-    console.log(new Array(51).join("*"));
-    console.log("\t LISTENING ON: \n\t\t localhost:3000");
-    console.log(new Array(51).join("*")); 
-  });
-});
+//   db.sequelize.sync().then(function() {
+//     var server = app.listen(3000, function() {
+//     // This part just adds a snazzy listening message:
+//     console.log(new Array(51).join("*"));
+//     console.log("\t LISTENING ON: \n\t\t localhost:3000");
+//     console.log(new Array(51).join("*")); 
+//   });
+// });
 
 
 
