@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-//ROUTES INDEX
+//ROUTES INDEX test
 app.get('/', function(req,res) {
 
 	console.log("index");
@@ -128,16 +128,23 @@ app.post('/message', function (req, res) {
 		.create({ text_body: request_body, user_id: user.id })
 		.then(function(message) {
 			console.log('message created with id ' + message.id);
-		})
+				var resp = new twilio.TwimlResponse();
+				resp.message('Got it! ');
+				res.writeHead(200, {
+					'Content-Type':'text/xml'
+				});
+				console.log("Sending resp.toString()",resp.toString());
+				res.end(resp.toString());
+			})
 
 	})
 
-	var resp = new twilio.TwimlResponse();
-	resp.message('Got it! ');
-	res.writeHead(200, {
-		'Content-Type':'text/xml'
-	});
-	res.end(resp.toString());
+	// var resp = new twilio.TwimlResponse();
+	// resp.message('Got it! ');
+	// res.writeHead(200, {
+	// 	'Content-Type':'text/xml'
+	// });
+	// res.end(resp.toString());
 
 });
 
@@ -154,14 +161,6 @@ app.post('/message', function (req, res) {
 app.listen(process.env.PORT || 3000);
 
 
-//   db.sequelize.sync().then(function() {
-//     var server = app.listen(3000, function() {
-//     // This part just adds a snazzy listening message:
-//     console.log(new Array(51).join("*"));
-//     console.log("\t LISTENING ON: \n\t\t localhost:3000");
-//     console.log(new Array(51).join("*")); 
-//   });
-// });
 
 
 
