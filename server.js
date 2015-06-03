@@ -128,23 +128,16 @@ app.post('/message', function (req, res) {
 		.create({ text_body: request_body, user_id: user.id })
 		.then(function(message) {
 			console.log('message created with id ' + message.id);
-				var resp = new twilio.TwimlResponse();
-				resp.message('Got it! ');
-				res.writeHead(200, {
-					'Content-Type':'text/xml'
-				});
-				console.log("Sending resp.toString()",resp.toString());
-				res.end(resp.toString());
-			})
+		})
 
 	})
 
-	// var resp = new twilio.TwimlResponse();
-	// resp.message('Got it! ');
-	// res.writeHead(200, {
-	// 	'Content-Type':'text/xml'
-	// });
-	// res.end(resp.toString());
+	var resp = new twilio.TwimlResponse();
+	resp.message('Got it! ');
+	res.writeHead(200, {
+		'Content-Type':'text/xml'
+	});
+	res.end(resp.toString());
 
 });
 
