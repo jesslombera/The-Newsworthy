@@ -1,0 +1,20 @@
+{
+  "development": {
+
+    "database": "thenewsworthy",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+
+    "database": "thenewsworthy",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+
+    "database": "thenewsworthy",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
