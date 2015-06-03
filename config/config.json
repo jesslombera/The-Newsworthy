@@ -12,6 +12,6 @@
     "dialect": "postgres"
   },
   "production": {
-    "use_env_variable": "HEROKU_POSTGRESQL_DATABASE_URL"
+    "use_env_variable": "HEROKU_POSTGRESQL_BRONZE_URL"
   }
 }
