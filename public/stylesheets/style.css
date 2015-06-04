@@ -4,6 +4,9 @@ body {
 	
 }
 
+
+
+
 h1.newsworthy {
 	text-align: center;
 	font-size: 50px;
@@ -17,7 +20,8 @@ p.intro-header {
 
 p.saveNum {
 	text-align: center;
-	font-size: 20px;
+	font-size: 25px;
+	font-weight: bold;
 }
 
 
