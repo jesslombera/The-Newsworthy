@@ -32,45 +32,79 @@ app.use(methodOverride('_method'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
 //ROUTES INDEX test
 app.get('/', function(req,res) {
-
 	console.log("index");
-
-	var request_body = 'http://www.google.com';
-	var request_phone = '+16507139719'
-
-
-	db.User
-	.findOrCreate( { where: {phone: request_phone} })
-	.spread(function(user, created) {
-
-		if (created) {
-			console.log('User created');
-		} else {
-			console.log('User already exists');
-		}
-
-		console.log('The user_id is ' + user.id);
-		console.log('The message is ' + request_body);
-
-		db.Message
-		.create({ text_body: request_body, user_id: user.id })
-		.then(function(message) {
-			console.log('message created with id ' + message.id);
-		})
-
-	})
-
-  res.render('index');
+	res.render('index');
 });
 
-// manually deliver all the messages
-app.get('/deliver', function(req,res) {
+// webhook used by twilio to send the new text message details
+app.post('/message', function (req, res) {
 
-	db.Message.findAll().then(function(messages) {
+	var resp = new twilio.TwimlResponse();
+
+	// Prevent the app fro mcrashing if the request came empty/undefined
+	if (req.body != undefined) {
+
+		var request_body = req.body.Body;
+		var request_phone = req.body.From;
+		
+		if (request_body.match(/^((ht|f)tps?:\/\/)?[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%"\,\{\}\\|\\\^\[\]`]+)?$/)) {
+
+			db.User
+			.findOrCreate( { where: {phone: request_phone} })
+			.spread(function(user, created) {
+
+				if (created) {
+					console.log('User created');
+				} else {
+					console.log('User already exists');
+				}
+
+				console.log('The user_id is ' + user.id);
+				console.log('The message is ' + request_body);
+
+				db.Message
+				.create({ text_body: request_body, user_id: user.id })
+				.then(function(message) {
+
+					console.log('message created with id ' + message.id);
+
+					resp.message('Got it! :-)');
+					res.writeHead(200, {
+						'Content-Type':'text/xml'
+					});
+					res.end(resp.toString());
+
+				})
+
+			})
+
+		} else if (request_body.match(/start/)) {
+
+			resp.message('Share URLs with this contact and we will send it back to you later!');
+			res.writeHead(200, {
+				'Content-Type':'text/xml'
+			});
+			res.end(resp.toString());
+
+		} else {
+			
+			resp.message('Not a valid URL, try again! :-(');
+			res.writeHead(200, {
+				'Content-Type':'text/xml'
+			});
+			res.end(resp.toString());
+
+		}		
+
+	}
+
+});
+
+new cronJob( '* * * * *', function(){
+
+  	db.Message.findAll({ where: { sent: false } }).then(function(messages) {
 
 		messages.forEach(function(message) {
 
@@ -90,75 +124,15 @@ app.get('/deliver', function(req,res) {
 
 			})
 
-			db.Message.destroy({where : {id : message.id}});
-			console.log("deleted message " + message.id);
+			message.updateAttributes({ sent: true });
 
 		});
 
 	});
 
-	res.render('index');
-
-})
-
-// webhook used by twilio to send the new text message details
-app.post('/message', function (req, res) {
-
-	console.log('/message was accessed');
-	console.log('The body is: ' + req.body.Body);
-	console.log('The sender is: ' + req.body.From);
-
-	var request_body = req.body.Body;
-	var request_phone = req.body.From;
-
-	db.User
-	.findOrCreate( { where: {phone: request_phone} })
-	.spread(function(user, created) {
-
-		if (created) {
-			console.log('User created');
-		} else {
-			console.log('User already exists');
-		}
-
-		console.log('The user_id is ' + user.id);
-		console.log('The message is ' + request_body);
-
-		db.Message
-		.create({ text_body: request_body, user_id: user.id })
-		.then(function(message) {
-			console.log('message created with id ' + message.id);
-		})
-
-	})
-
-	var resp = new twilio.TwimlResponse();
-	resp.message('Got it! ');
-	res.writeHead(200, {
-		'Content-Type':'text/xml'
-	});
-	res.end(resp.toString());
-
-});
-
-
-
-
-
-
-
-
-
-
+},  null, true);
 
 app.listen(process.env.PORT || 3000);
-
-
-
-
-
-
-
 
 
 
