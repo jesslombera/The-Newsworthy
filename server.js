@@ -123,7 +123,7 @@ new cronJob( '* * * * *', function(){
 				client.sms.messages.post({
 				    to: user.phone, 
 				    from: TWILIO_NR,
-				    body: message.text_body
+				    body: "A friendly reminder from The News Worthy" + " " + message.text_body
 				}, function(err, text) {
 				    console.log('You sent: '+ text.body);
 				    console.log('Current status of this text message is: '+ text.status);
