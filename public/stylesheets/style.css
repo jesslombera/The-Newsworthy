@@ -1,5 +1,29 @@
 body {
 	padding-top: 70px;
+	font-family: 'Lato', sans-serif;
 	
 }
 
+h1.newsworthy {
+	padding-top: 50px;
+	text-align: center;
+	font-size: 50px;
+}
+
+p.intro-header {
+	text-align: center;
+	font-size: 20px;
+	padding-bottom: 25px;
+}
+
+p.saveNum {
+	text-align: center;
+	font-size: 20px;
+}
+
+
+p.howWorks{
+	margin-left: auto;
+	font-size: 20px;
+
+}

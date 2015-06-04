@@ -16,6 +16,13 @@ var env = process.env;
 var account_id = env.TWILIO_SID;
 var auth_token = env.TWILIO_AUTH_TOKEN;	
 
+// BITLY API
+// var BitlyAPI = require("node-bitlyapi");
+// var Bitly = new BitlyAPI({
+//     client_id: "Something",
+//     client_secret: "Something"  
+// });
+
 
 // Your accountSid and authToken from twilio.com/user/account
 var client = require('twilio')(account_id, auth_token);
