@@ -49,7 +49,7 @@ app.post('/message', function (req, res) {
 		var request_body = req.body.Body;
 		var request_phone = req.body.From;
 		
-		if (request_body.match(/^((ht|f)tps?:\/\/)?[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%"\,\{\}\\|\\\^\[\]`]+)?$/)) {
+		if (request_body.match(/^((ht|f)tps?:\/\/)?[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%"\,\{\}\\|\\\^\[\]`]+)?$/i)) {
 
 			db.User
 			.findOrCreate( { where: {phone: request_phone} })
@@ -70,7 +70,7 @@ app.post('/message', function (req, res) {
 
 					console.log('message created with id ' + message.id);
 
-					resp.message('Got it! :-)');
+					resp.message("Got it! I'll text you back at 9 pm :-)'");
 					res.writeHead(200, {
 						'Content-Type':'text/xml'
 					});
@@ -80,7 +80,7 @@ app.post('/message', function (req, res) {
 
 			})
 
-		} else if (request_body.match(/start/)) {
+		} else if (request_body.match(/start/i)) {
 
 			resp.message('Share URLs with this contact and we will send it back to you later!');
 			res.writeHead(200, {
@@ -90,7 +90,8 @@ app.post('/message', function (req, res) {
 
 		} else {
 			
-			resp.message('Not a valid URL, try again! :-(');
+			resp.message("Oops, that's not a link. Text me links
+			and I'll send them back to you at 9:00pm!");	
 			res.writeHead(200, {
 				'Content-Type':'text/xml'
 			});
