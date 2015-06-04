@@ -70,7 +70,7 @@ app.post('/message', function (req, res) {
 
 					console.log('message created with id ' + message.id);
 
-					resp.message("Got it! I'll text you back at 9 pm :-)'");
+					resp.message("Got it! I'll text you back at 9pm :-)");
 					res.writeHead(200, {
 						'Content-Type':'text/xml'
 					});
@@ -90,7 +90,7 @@ app.post('/message', function (req, res) {
 
 		} else {
 			
-			resp.message("Oops, that's not a link. Text me links and I'll send them back to you at 9:00pm!");	
+			resp.message("Oops, that's not a link. Text me links and I'll send them back to you at 9pm!");	
 			res.writeHead(200, {
 				'Content-Type':'text/xml'
 			});
