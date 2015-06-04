@@ -90,8 +90,7 @@ app.post('/message', function (req, res) {
 
 		} else {
 			
-			resp.message("Oops, that's not a link. Text me links
-			and I'll send them back to you at 9:00pm!");	
+			resp.message("Oops, that's not a link. Text me links and I'll send them back to you at 9:00pm!");	
 			res.writeHead(200, {
 				'Content-Type':'text/xml'
 			});
