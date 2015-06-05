@@ -16,12 +16,7 @@ var env = process.env;
 var account_id = env.TWILIO_SID;
 var auth_token = env.TWILIO_AUTH_TOKEN;	
 
-// BITLY API
-// var BitlyAPI = require("node-bitlyapi");
-// var Bitly = new BitlyAPI({
-//     client_id: "Something",
-//     client_secret: "Something"  
-// });
+var shorturl = require('shorturl');
 
 
 // Your accountSid and authToken from twilio.com/user/account
@@ -45,6 +40,11 @@ app.get('/', function(req,res) {
 	res.render('index');
 });
 
+
+
+
+
+
 // webhook used by twilio to send the new text message details
 app.post('/message', function (req, res) {
 
@@ -58,12 +58,17 @@ app.post('/message', function (req, res) {
 		
 		if (request_body.match(/^((ht|f)tps?:\/\/)?[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%"\,\{\}\\|\\\^\[\]`]+)?$/i)) {
 
+			// shorturl(request_body, function(result) {
+   //  		console.log(result);
+			// });
+
 			db.User
 			.findOrCreate( { where: {phone: request_phone} })
 			.spread(function(user, created) {
 
 				if (created) {
 					console.log('User created');
+
 				} else {
 					console.log('User already exists');
 				}
@@ -77,7 +82,7 @@ app.post('/message', function (req, res) {
 
 					console.log('message created with id ' + message.id);
 
-					resp.message("Got it! I'll text you back at 9pm :-)");
+					resp.message("Got your link! I'll text you back at 9pm :-)");
 					res.writeHead(200, {
 						'Content-Type':'text/xml'
 					});
@@ -92,8 +97,10 @@ app.post('/message', function (req, res) {
 			resp.message('Share URLs with this contact and we will send it back to you later!');
 			res.writeHead(200, {
 				'Content-Type':'text/xml'
+				
 			});
 			res.end(resp.toString());
+
 
 		} else {
 			
@@ -123,7 +130,7 @@ new cronJob( '* * * * *', function(){
 				client.sms.messages.post({
 				    to: user.phone, 
 				    from: TWILIO_NR,
-				    body: "A friendly reminder from The News Worthy, here is your link: " + " " + message.text_body
+				    body: "A friendly reminder from loopbird, here is your link: " + " " + message.text_body
 				}, function(err, text) {
 				    console.log('You sent: '+ text.body);
 				    console.log('Current status of this text message is: '+ text.status);

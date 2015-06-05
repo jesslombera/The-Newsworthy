@@ -14,13 +14,19 @@ h1.newsworthy {
 
 p.intro-header {
 	text-align: center;
-	font-size: 20px;
+	font-size: 15px;
 	
 }
 
 p.saveNum {
 	text-align: center;
-	font-size: 20px;
+	font-size: 35px;
+	font-weight: bold;
+}
+
+p.save {
+	text-align: center;
+	font-size: 18px;
 	font-weight: bold;
 }
 
