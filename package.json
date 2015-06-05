@@ -17,6 +17,7 @@
     "lodash": "^3.9.3",
     "method-override": "^2.3.3",
     "node-bitlyapi": "^0.4.0",
+    "node-emoji": "^0.1.0",
     "node-url-shorter": "0.0.4",
     "pg": "^4.3.0",
     "pg-hstore": "^2.3.2",

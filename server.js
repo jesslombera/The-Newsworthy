@@ -15,6 +15,11 @@ var twilio = require('twilio');
 var env = process.env;
 var account_id = env.TWILIO_SID;
 var auth_token = env.TWILIO_AUTH_TOKEN;	
+var emoji = require('node-emoji');
+
+console.log(emoji.get('coffee')); // returns the emoji code for coffee (displays emoji on terminals that support it) 
+console.log(emoji.which(emoji.get('coffee'))); // returns coffee 
+console.log(emoji.get(':fast_forward:')); // also supports github flavored markdown emoji (http://www.emoji-cheat-sheet.com/) 
 
 var shorturl = require('shorturl');
 
@@ -82,7 +87,7 @@ app.post('/message', function (req, res) {
 
 					console.log('message created with id ' + message.id);
 
-					resp.message("Got your link! I'll text you back at 9pm :-)");
+					resp.message("Got your link! I'll text you back at 9pm" + emoji.get(':smiley:'));
 					res.writeHead(200, {
 						'Content-Type':'text/xml'
 					});
@@ -104,7 +109,7 @@ app.post('/message', function (req, res) {
 
 		} else {
 			
-			resp.message("Oops, that's not a link. Text me links and I'll send them back to you at 9pm!");	
+			resp.message("Oops, that's not a link." + emoji.get(':confused:') + " " + "Text me links and I'll send them back to you at 9pm!");	
 			res.writeHead(200, {
 				'Content-Type':'text/xml'
 			});
