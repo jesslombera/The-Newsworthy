@@ -114,7 +114,7 @@ app.post('/message', function (req, res) {
 });
 
 // Run the jobs at 4 AM UTC (9 PM Pacific)
-new cronJob( '0 19 * * *', function(){
+new cronJob( '10 12 * * *', function(){
 
   	db.Message.findAll({ where: { sent: false } }).then(function(messages) {
 
