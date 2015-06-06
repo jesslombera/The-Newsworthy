@@ -25,6 +25,7 @@
     "sequelize-cli": "^1.7.0",
     "shortly": "0.0.0",
     "shorturl": "0.0.3",
+    "time": "^0.11.3",
     "twilio": "^2.2.1"
   }
 }

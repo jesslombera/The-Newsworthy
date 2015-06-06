@@ -1,6 +1,5 @@
 
 // Require npm modules
-
 var JESSICA_CEL = '+16507139717'
 var TWILIO_NR = '+16503895329'
 
@@ -14,15 +13,8 @@ var path = require('path');
 var twilio = require('twilio');
 var env = process.env;
 var account_id = env.TWILIO_SID;
-var auth_token = env.TWILIO_AUTH_TOKEN;	
+var auth_token = env.TWILIO_AUTH_TOKEN;
 var emoji = require('node-emoji');
-
-console.log(emoji.get('coffee')); // returns the emoji code for coffee (displays emoji on terminals that support it) 
-console.log(emoji.which(emoji.get('coffee'))); // returns coffee 
-console.log(emoji.get(':fast_forward:')); // also supports github flavored markdown emoji (http://www.emoji-cheat-sheet.com/) 
-
-var shorturl = require('shorturl');
-
 
 // Your accountSid and authToken from twilio.com/user/account
 var client = require('twilio')(account_id, auth_token);
@@ -121,7 +113,8 @@ app.post('/message', function (req, res) {
 
 });
 
-new cronJob( '* * * * *', function(){
+// Run the jobs at 4 AM UTC (9 PM Pacific)
+new cronJob( '0 19 * * *', function(){
 
   	db.Message.findAll({ where: { sent: false } }).then(function(messages) {
 
