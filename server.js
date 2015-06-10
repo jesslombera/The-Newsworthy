@@ -55,9 +55,9 @@ app.post('/message', function (req, res) {
 		var request_body = req.body.Body;
 		var request_phone = req.body.From;
 		
-		if (request_body.match(/^((ht|f)tps?:\/\/)?[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%"\,\{\}\\|\\\^\[\]`]+)?$/i)) {
+		if (request_body.match(/((ht|f)tps?:\/\/)?[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%"\,\{\}\\|\\\^\[\]`]+)?/i)) {
 
-	
+			var just_url = request_body.match(/((ht|f)tps?:\/\/)?[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%"\,\{\}\\|\\\^\[\]`]+)?/i)[0];
 
 			db.User
 			.findOrCreate( { where: {phone: request_phone} })
@@ -65,21 +65,20 @@ app.post('/message', function (req, res) {
 
 				if (created) {
 					console.log('User created');
-
 				} else {
 					console.log('User already exists');
 				}
 
-				console.log('The user_id is ' + user.id);
-				console.log('The message is ' + request_body);
+				console.log('The full message is => ' + request_body);
+				console.log('The URL in the message is => ' + just_url);
 
 				db.Message
-				.create({ text_body: request_body, user_id: user.id })
+				.create({ text_body: just_url, user_id: user.id, time: user.time })
 				.then(function(message) {
 
 					console.log('message created with id ' + message.id);
 
-					resp.message("Got your link! I'll text you back at 9pm" + emoji.get(':smiley:'));
+					resp.message("Got your link! I'll text you back at " + user.time + "h " + emoji.get(':smiley:'));
 					res.writeHead(200, {
 						'Content-Type':'text/xml'
 					});
@@ -98,6 +97,14 @@ app.post('/message', function (req, res) {
 			});
 			res.end(resp.toString());
 
+		} else if (request_body.match(/^([0-9]|1[0-9]|2[0-3])$/)) {
+
+			resp.message('Setting your reminder time to ' + request_body + 'h');
+			res.writeHead(200, {
+				'Content-Type':'text/xml'
+				
+			});
+			res.end(resp.toString());
 
 		} else {
 			
@@ -114,9 +121,12 @@ app.post('/message', function (req, res) {
 });
 
 // Run the jobs at 4 AM UTC (9 PM Pacific)
-new cronJob( '* * * * *', function(){
+new cronJob( '0 * * * *', function(){
 
-  	db.Message.findAll({ where: { sent: false } }).then(function(messages) {
+	current_hour = new Date().getHours();
+
+	// find all unsent messages, for which the time matches the current hour
+  	db.Message.findAll({ where: { sent: false, time: current_hour } }).then(function(messages) {
 
 		messages.forEach(function(message) {
 

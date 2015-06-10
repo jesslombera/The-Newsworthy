@@ -3,7 +3,8 @@ module.exports = function(sequelize, DataTypes) {
   var Message = sequelize.define('Message', {
     text_body: DataTypes.TEXT,
     user_id: DataTypes.INTEGER,
-    sent: DataTypes.BOOLEAN
+    sent: DataTypes.BOOLEAN,
+    time: DataTypes.INTEGER,
   }, {
     classMethods: {
       associate: function(models) {

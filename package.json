@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bitly": "^2.0.0",
     "body-parser": "^1.12.4",
     "cron": "^1.0.9",
     "ejs": "^2.3.1",
