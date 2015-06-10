@@ -1,8 +1,6 @@
-
 // Require npm modules
 var JESSICA_CEL = '+16507139717'
 var TWILIO_NR = '+16503895329'
-
 
 var express = require('express');
 var	bodyParser = require('body-parser');
@@ -15,6 +13,8 @@ var env = process.env;
 var account_id = env.TWILIO_SID;
 var auth_token = env.TWILIO_AUTH_TOKEN;
 var emoji = require('node-emoji');
+var shorturl = require('shorturl');
+
 
 // Your accountSid and authToken from twilio.com/user/account
 var client = require('twilio')(account_id, auth_token);
@@ -30,6 +30,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 //ROUTES INDEX test
 app.get('/', function(req,res) {
@@ -55,9 +57,7 @@ app.post('/message', function (req, res) {
 		
 		if (request_body.match(/^((ht|f)tps?:\/\/)?[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%"\,\{\}\\|\\\^\[\]`]+)?$/i)) {
 
-			// shorturl(request_body, function(result) {
-   //  		console.log(result);
-			// });
+	
 
 			db.User
 			.findOrCreate( { where: {phone: request_phone} })
@@ -114,25 +114,36 @@ app.post('/message', function (req, res) {
 });
 
 // Run the jobs at 4 AM UTC (9 PM Pacific)
-new cronJob( '0 21 * * *', function(){
+new cronJob( '* * * * *', function(){
 
   	db.Message.findAll({ where: { sent: false } }).then(function(messages) {
 
 		messages.forEach(function(message) {
 
 			db.User.findById(message.user_id).then(function(user) {
+				
+				var shortened_message;
+				shorturl(message.text_body, function(result) {
 
-				console.log("The user phone is" + user.phone);
+					console.log('The user phone is' + user.phone);
+					console.log('The user message text_body is ' + message.text_body);
+					console.log('The short url is ' + result);
 
-				// to post to TWILIO
-				client.sms.messages.post({
-				    to: user.phone, 
-				    from: TWILIO_NR,
-				    body: "A friendly reminder from loopbird, here is your link: " + " " + message.text_body
-				}, function(err, text) {
-				    console.log('You sent: '+ text.body);
-				    console.log('Current status of this text message is: '+ text.status);
+					shortened_message = result;
+
+					// to post to TWILIO
+					client.sms.messages.post({
+					    to: user.phone, 
+					    from: TWILIO_NR,
+					    body: 'A friendly reminder from loopbird, here is your link: ' + shortened_message
+					}, function(err, text) {
+					    console.log('You sent: '+ text.body);
+					    console.log('Current status of this text message is: '+ text.status);
+					});
+
 				});
+	
+
 
 			})
 
@@ -143,6 +154,11 @@ new cronJob( '0 21 * * *', function(){
 	});
 
 },  null, true);
+
+
+
+
+
 
 app.listen(process.env.PORT || 3000);
 
